@@ -1,0 +1,144 @@
+#include <iostream>
+#include <iomanip>
+#include <vector>
+
+using namespace std;
+
+class TemperatureConverter {
+public:
+    TemperatureConverter() {
+        history.clear();
+    }
+
+    double convert(double value, const string& fromUnit, const string& toUnit) {
+        double result = 0.0;
+        string conversionDesc;
+
+        if (fromUnit == "Fahrenheit" && toUnit == "Celsius") {
+            result = (value - 32.0) * 5.0 / 9.0;
+            conversionDesc = "Fahrenheit to Celsius";
+        } else if (fromUnit == "Celsius" && toUnit == "Fahrenheit") {
+            result = value * 9.0 / 5.0 + 32.0;
+            conversionDesc = "Celsius to Fahrenheit";
+        } else if (fromUnit == "Celsius" && toUnit == "Kelvin") {
+            result = value + 273.15;
+            conversionDesc = "Celsius to Kelvin";
+        } else if (fromUnit == "Kelvin" && toUnit == "Celsius") {
+            result = value - 273.15;
+            conversionDesc = "Kelvin to Celsius";
+        } else if (fromUnit == "Fahrenheit" && toUnit == "Kelvin") {
+            result = (value - 32.0) * 5.0 / 9.0 + 273.15;
+            conversionDesc = "Fahrenheit to Kelvin";
+        } else if (fromUnit == "Kelvin" && toUnit == "Fahrenheit") {
+            result = (value - 273.15) * 9.0 / 5.0 + 32.0;
+            conversionDesc = "Kelvin to Fahrenheit";
+        } else if (fromUnit == "Celsius" && toUnit == "Rankine") {
+            result = (value + 273.15) * 9.0 / 5.0;
+            conversionDesc = "Celsius to Rankine";
+        } else if (fromUnit == "Rankine" && toUnit == "Celsius") {
+            result = (value - 491.67) * 5.0 / 9.0;
+            conversionDesc = "Rankine to Celsius";
+        } else {
+            cout << "Invalid unit conversion: " << fromUnit << " to " << toUnit << endl;
+            return 0.0;
+        }
+
+        addConversion(value, fromUnit, result, toUnit, conversionDesc);
+        return result;
+    }
+
+    void displayHistory() {
+        cout << "Conversion History:" << endl;
+        for (const auto& entry : history) {
+            cout << fixed << setprecision(2) << entry.first << " " << entry.second << " converted to " << entry.third << " " << entry.fourth << " - " << entry.fifth << endl;
+        }
+    }
+
+private:
+    struct ConversionEntry {
+        double first;
+        string second;
+        double third;
+        string fourth;
+        string fifth;
+    };
+
+    vector<ConversionEntry> history;
+
+    void addConversion(double value, const string& fromUnit, double result, const string& toUnit, const string& desc) {
+        history.push_back({value, fromUnit, result, toUnit, desc});
+    }
+};
+
+int main() {
+    TemperatureConverter converter;
+    char repeat;
+
+    do {
+        int choice;
+        double temp;
+        string from, to;
+
+        cout << "Temperature Converter" << endl
+             << "1. Fahrenheit\n2. Celsius\n3. Kelvin\n4. Rankine" << endl;
+        cout << "Enter source temperature unit (1-4): ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                from = "Fahrenheit";
+                break;
+            case 2:
+                from = "Celsius";
+                break;
+            case 3:
+                from = "Kelvin";
+                break;
+            case 4:
+                from = "Rankine";
+                break;
+            default:
+                cout << "Invalid choice. Please enter a number between 1 and 4." << endl;
+                continue;
+        }
+
+        cout << "Enter temperature: ";
+        cin >> temp;
+
+        cout << "1. Fahrenheit\n2. Celsius\n3. Kelvin\n4. Rankine" << endl;
+        cout << "Enter target temperature unit (1-4): ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                to = "Fahrenheit";
+                break;
+            case 2:
+                to = "Celsius";
+                break;
+            case 3:
+                to = "Kelvin";
+                break;
+            case 4:
+                to = "Rankine";
+                break;
+            default:
+                cout << "Invalid choice. Please enter a number between 1 and 4." << endl;
+                continue;
+        }
+
+        double result = converter.convert(temp, from, to);
+
+        if (result != 0.0) {
+            cout << fixed << setprecision(2) << temp << " " << from << " is equal to " << result << " " << to << endl;
+        }
+
+        cout << "Do you want to convert another temperature? (y/n): ";
+        cin >> repeat;
+
+    } while (repeat == 'y' || repeat == 'Y');
+
+    cout << "Program terminated." << endl;
+
+    return 0;
+}

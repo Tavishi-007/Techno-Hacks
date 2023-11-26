@@ -1,0 +1,69 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+int main() {
+    // Seed for random number generation
+    std::srand(static_cast<unsigned int>(std::time(0)));
+
+    int difficulty;
+    std::cout << "Welcome to the Guess the Number game!\n";
+    std::cout << "Choose a difficulty level:\n";
+    std::cout << "1. Easy\n2. Medium\n3. Hard\n";
+    std::cout << "Enter the number corresponding to your choice: ";
+    std::cin >> difficulty;
+
+    int maxAttempts;
+    switch (difficulty) {
+        case 1:
+            maxAttempts = 10;
+            break;
+        case 2:
+            maxAttempts = 7;
+            break;
+        case 3:
+            maxAttempts = 5;
+            break;
+        default:
+            std::cout << "Invalid choice. Setting difficulty to medium.\n";
+            maxAttempts = 7;
+    }
+
+    // Generate a random number based on difficulty level
+    int secretNumber = std::rand() % 100 + 1;
+
+    int guess;
+    int attempts = 0;
+    const int hintThreshold = 3;
+
+    std::cout << "Try to guess the number between 1 and 100.\n";
+
+    do {
+        std::cout << "Enter your guess: ";
+        std::cin >> guess;
+
+        attempts++;
+
+        if (guess > secretNumber) {
+            std::cout << "Too high!";
+        } else if (guess < secretNumber) {
+            std::cout << "Too low!";
+        } else {
+            std::cout << "Congratulations! You guessed the number in " << attempts << " attempts.\n";
+            break;
+        }
+
+        if (attempts % hintThreshold == 0 && attempts < maxAttempts) {
+            std::cout << " Here's a hint: The number is divisible by 3.\n";
+        }
+
+        std::cout << " Try again.\n";
+
+    } while (attempts < maxAttempts);
+
+    if (attempts == maxAttempts) {
+        std::cout << "Sorry, you've reached the maximum number of attempts. The correct number was: " << secretNumber << "\n";
+    }
+
+    return 0;
+}
